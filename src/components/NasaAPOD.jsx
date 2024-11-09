@@ -62,17 +62,50 @@ const NasaAPOD = () => {
 
   const downloadImage = async () => {
     try {
-      const response = await fetch(apodData.url);
+      if (!apodData?.url) {
+        throw new Error('No image URL available');
+      }
+
+      setLoading(true);
+
+      const response = await fetch(apodData.url, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      if (!response.headers.get('content-type')?.includes('image')) {
+        window.open(apodData.url, '_blank');
+        return;
+      }
+
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
+      
+      const filename = apodData.title
+        .replace(/[^a-z0-9]/gi, '_')
+        .toLowerCase();
+      
       link.href = url;
-      link.download = `${apodData.title}.jpg`;
+      link.download = `${filename}_${apodData.date}.jpg`;
+      
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
     } catch (error) {
       console.error('Download failed:', error);
+      window.open(apodData.url, '_blank');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -133,9 +166,16 @@ const NasaAPOD = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={downloadImage}
-              className="bg-gradient-to-r from-green-600 to-emerald-600 p-2 rounded-lg"
+              disabled={loading}
+              className={`bg-gradient-to-r from-green-600 to-emerald-600 p-2 rounded-lg ${
+                loading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
             >
-              <FaDownload className="text-white/90" />
+              {loading ? (
+                <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full" />
+              ) : (
+                <FaDownload className="text-white/90" />
+              )}
             </motion.button>
           </div>
         </div>
