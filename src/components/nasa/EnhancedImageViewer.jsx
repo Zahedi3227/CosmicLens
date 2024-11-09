@@ -1,10 +1,11 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { FaExpand, FaHeart, FaShare } from 'react-icons/fa';
+import { FaDownload, FaExpand, FaHeart, FaInfoCircle, FaShare } from 'react-icons/fa';
 
 const EnhancedImageViewer = ({ image }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
 
   const handleShare = () => {
     if (navigator.share) {
@@ -14,6 +15,15 @@ const EnhancedImageViewer = ({ image }) => {
         url: window.location.href,
       });
     }
+  };
+
+  const handleDownload = () => {
+    const link = document.createElement('a');
+    link.href = image.url;
+    link.download = image.title;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -70,6 +80,18 @@ const EnhancedImageViewer = ({ image }) => {
                   >
                     <FaExpand className="w-5 h-5" />
                   </button>
+                  <button
+                    onClick={handleDownload}
+                    className="p-2 rounded-full bg-[#219B9D]/20 hover:bg-[#219B9D]/30 transition-all"
+                  >
+                    <FaDownload className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => setShowInfo(!showInfo)}
+                    className="p-2 rounded-full bg-[#219B9D]/20 hover:bg-[#219B9D]/30 transition-all"
+                  >
+                    <FaInfoCircle className="w-5 h-5" />
+                  </button>
                 </div>
               </div>
             </div>
@@ -78,14 +100,16 @@ const EnhancedImageViewer = ({ image }) => {
       </div>
 
       {/* Image Details */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="bg-[#4C1F7A]/30 backdrop-blur-xl rounded-2xl p-6 border border-[#219B9D]/20"
-      >
-        <h3 className="text-xl font-bold text-[#FF8000] mb-4">{image.title}</h3>
-        <p className="text-sm text-[#EEEEEE]/90">{image.explanation}</p>
-      </motion.div>
+      {showInfo && (
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="bg-[#4C1F7A]/30 backdrop-blur-xl rounded-2xl p-6 border border-[#219B9D]/20"
+        >
+          <h3 className="text-xl font-bold text-[#FF8000] mb-4">{image.title}</h3>
+          <p className="text-sm text-[#EEEEEE]/90">{image.explanation}</p>
+        </motion.div>
+      )}
     </motion.div>
   );
 };
