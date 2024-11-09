@@ -1,12 +1,13 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useRef, useState } from 'react';
 import {
-    FaAdjust,
-    FaCompress,
-    FaDownload,
-    FaExpand,
-    FaHeart
-} from 'react-icons/fa';
+    Download,
+    Expand,
+    Heart,
+    Minimize2,
+    Settings,
+    X
+} from 'lucide-react';
+import { useRef, useState } from 'react';
 
 const AdvancedImageViewer = ({ image, onToggleFavorite, isFavorite }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -96,24 +97,24 @@ const AdvancedImageViewer = ({ image, onToggleFavorite, isFavorite }) => {
             <div className="absolute top-0 left-0 right-0 p-4 bg-gradient-to-b from-black/70 to-transparent">
               <div className="flex justify-end gap-2">
                 <ControlButton
-                  icon={showControls ? FaCompress : FaAdjust}
+                  icon={showControls ? X : Settings}
                   onClick={() => setShowControls(!showControls)}
                   tooltip="Image Controls"
                 />
                 <ControlButton
-                  icon={isFullscreen ? FaCompress : FaExpand}
+                  icon={isFullscreen ? Minimize2 : Expand}
                   onClick={() => setIsFullscreen(!isFullscreen)}
                   tooltip="Fullscreen"
                 />
                 {image.media_type === 'image' && (
                   <ControlButton
-                    icon={FaDownload}
+                    icon={Download}
                     onClick={handleDownload}
                     tooltip="Open Image in New Tab"
                   />
                 )}
                 <ControlButton
-                  icon={FaHeart}
+                  icon={Heart}
                   onClick={() => onToggleFavorite(image)}
                   tooltip={isFavorite ? "Remove from Favorites" : "Add to Favorites"}
                   className={isFavorite ? "text-red-500" : ""}
@@ -178,14 +179,14 @@ const AdvancedImageViewer = ({ image, onToggleFavorite, isFavorite }) => {
   );
 };
 
-// Update the ControlButton component
-const ControlButton = ({ icon: Icon, onClick, tooltip }) => (
+// Update ControlButton component
+const ControlButton = ({ icon: Icon, onClick, tooltip, className = '' }) => (
   <motion.button
     whileHover={{ scale: 1.1 }}
     whileTap={{ scale: 0.9 }}
     onClick={onClick}
-    className="p-2 rounded-lg bg-space-800/80 hover:bg-space-700/80 
-              text-white/80 hover:text-white transition-colors"
+    className={`p-2 rounded-lg bg-space-800/80 hover:bg-space-700/80 
+              text-white/80 hover:text-white transition-colors ${className}`}
     title={tooltip}
   >
     <Icon className="w-5 h-5" />

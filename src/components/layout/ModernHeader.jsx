@@ -40,7 +40,7 @@ const ModernHeader = ({ selectedDate, onDateChange, onRandomDate }) => {
             <div className="absolute inset-0 bg-gradient-to-r from-nebula-500/20 to-cosmos-500/20 
                           rounded-xl blur group-hover:opacity-75 transition-opacity" />
             <div className="relative flex items-center bg-nebula-900/50 rounded-xl border border-nebula-700/30 
-                          overflow-hidden hover:border-nebula-500/50 transition-colors">
+                          overflow-hidden hover:border-nebula-500/50 transition-colors ">
               <span className="pl-4">
                 <FaCalendar className="w-5 h-5 text-nebula-400" />
               </span>
@@ -50,7 +50,7 @@ const ModernHeader = ({ selectedDate, onDateChange, onRandomDate }) => {
                 onChange={(e) => onDateChange(e.target.value)}
                 max={new Date().toISOString().split('T')[0]}
                 min="1995-06-16"
-                className="bg-transparent px-4 py-3 text-nebula-100 focus:outline-none w-44
+                className=" bg-transparent pl-6 pr-4 py-3 text-nebula-100 focus:outline-none w-48
                          placeholder-nebula-400/50"
               />
             </div>

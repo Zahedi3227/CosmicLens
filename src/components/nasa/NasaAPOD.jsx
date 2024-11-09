@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { FaCalendar, FaRandom } from 'react-icons/fa';
+import { Calendar, Shuffle } from 'lucide-react';
 import { useNasaAPOD } from '../../hooks/useNasaAPOD';
 import AdvancedImageViewer from './AdvancedImageViewer';
 
@@ -41,18 +41,18 @@ const NasaAPOD = () => {
 
         {/* Controls */}
         <div className="mb-8 flex flex-wrap gap-4 items-center justify-center">
-          <div className="relative">
+          <div className="relative w-40">
             <input
               type="date"
               value={selectedDate}
               onChange={handleDateChange}
               max={new Date().toISOString().split('T')[0]}
               min="1995-06-16"
-              className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 text-white
+              className="bg-transparent border border-zinc-800 rounded-lg px-4 py-2 text-white
                         focus:border-cosmic-500 focus:ring-1 focus:ring-cosmic-500 outline-none
-                        appearance-none w-48"
+                        appearance-none w-full date-input"
             />
-            <FaCalendar className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
+            <Calendar className="absolute  right-9 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none w-5 h-5" />
           </div>
 
           <motion.button
@@ -62,7 +62,7 @@ const NasaAPOD = () => {
             className="flex items-center gap-2 bg-cosmic-600 hover:bg-cosmic-700 px-4 py-2 
                      rounded-lg text-white transition-colors"
           >
-            <FaRandom className="w-4 h-4" />
+            <Shuffle className="w-4 h-4" />
             Random
           </motion.button>
         </div>
