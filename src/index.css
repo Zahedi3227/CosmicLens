@@ -1,0 +1,19 @@
+@import url(https://fonts.googleapis.com/css?family=Noto+Sans+Warang+Citi:regular);
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Noto Sans Warang Citi', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    background-color: #212121
+    ;
+}
