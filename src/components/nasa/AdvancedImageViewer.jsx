@@ -1,14 +1,15 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import {
     FaAdjust,
     FaCompress,
-    FaDownload, FaExpand
+    FaDownload,
+    FaExpand,
+    FaHeart
 } from 'react-icons/fa';
 
-const AdvancedImageViewer = ({ image }) => {
+const AdvancedImageViewer = ({ image, onToggleFavorite, isFavorite }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [isFavorited, setIsFavorited] = useState(false);
   const [showControls, setShowControls] = useState(false);
   const [imageSettings, setImageSettings] = useState({
     brightness: 100,
@@ -17,8 +18,6 @@ const AdvancedImageViewer = ({ image }) => {
     scale: 1,
   });
   const imageRef = useRef(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const containerRef = useRef(null);
 
   const handleImageAdjustment = (type, value) => {
     setImageSettings(prev => ({ ...prev, [type]: value }));
@@ -26,17 +25,34 @@ const AdvancedImageViewer = ({ image }) => {
 
   const handleDownload = async () => {
     try {
-      const response = await fetch(image.url);
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
+      if (image.media_type === 'video') {
+        window.open(image.url, '_blank');
+        return;
+      }
+
+      // For HD images, prefer hdurl if available
+      const imageUrl = image.hdurl || image.url;
+      
+      // Method 1: Direct download attempt
       const link = document.createElement('a');
-      link.href = url;
-      link.download = `${image.title}.jpg`;
+      link.href = imageUrl;
+      link.target = '_blank';
+      link.download = `NASA_APOD_${image.date}.jpg`;
+      
+      // Try direct download first
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+
+      // Method 2: Fallback to opening in new tab
+      setTimeout(() => {
+        window.open(imageUrl, '_blank');
+      }, 1000);
+
     } catch (error) {
       console.error('Download failed:', error);
+      // Fallback: Open image in new tab
+      window.open(image.url, '_blank');
     }
   };
 
@@ -47,47 +63,32 @@ const AdvancedImageViewer = ({ image }) => {
     transform: `scale(${imageSettings.scale})`,
   };
 
-  useEffect(() => {
-    const calculateDimensions = () => {
-      if (containerRef.current) {
-        const container = containerRef.current;
-        const containerWidth = container.clientWidth;
-        const maxHeight = window.innerHeight * 0.7; // 70% of viewport height
-        
-        let width = containerWidth;
-        let height = (containerWidth * 9) / 16; // 16:9 aspect ratio
-
-        if (height > maxHeight) {
-          height = maxHeight;
-          width = (height * 16) / 9;
-        }
-
-        setDimensions({ width, height });
-      }
-    };
-
-    calculateDimensions();
-    window.addEventListener('resize', calculateDimensions);
-    return () => window.removeEventListener('resize', calculateDimensions);
-  }, []);
-
   return (
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="bg-space-900/30 backdrop-blur-lg rounded-2xl overflow-hidden border border-space-700/10"
+      className="bg-zinc-900/30 backdrop-blur-lg rounded-2xl overflow-hidden border border-zinc-800/50"
     >
       {/* Image Container */}
       <div className="relative group">
         <div className={`relative ${isFullscreen ? 'fixed inset-0 z-50 bg-black' : ''}`}>
-          <img
-            ref={imageRef}
-            src={image.url}
-            alt={image.title}
-            className={`w-full ${isFullscreen ? 'h-screen object-contain' : 'aspect-[16/9] object-cover'} 
-              transition-transform duration-500`}
-            style={imageStyle}
-          />
+          {image.media_type === 'video' ? (
+            <iframe
+              src={image.url}
+              title={image.title}
+              className="w-full aspect-video"
+              allowFullScreen
+            />
+          ) : (
+            <img
+              ref={imageRef}
+              src={image.url}
+              alt={image.title}
+              className={`w-full ${isFullscreen ? 'h-screen object-contain' : 'aspect-video object-cover'} 
+                transition-transform duration-500`}
+              style={imageStyle}
+            />
+          )}
 
           {/* Overlay Controls */}
           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -104,10 +105,18 @@ const AdvancedImageViewer = ({ image }) => {
                   onClick={() => setIsFullscreen(!isFullscreen)}
                   tooltip="Fullscreen"
                 />
+                {image.media_type === 'image' && (
+                  <ControlButton
+                    icon={FaDownload}
+                    onClick={handleDownload}
+                    tooltip="Open Image in New Tab"
+                  />
+                )}
                 <ControlButton
-                  icon={FaDownload}
-                  onClick={handleDownload}
-                  tooltip="Download"
+                  icon={FaHeart}
+                  onClick={() => onToggleFavorite(image)}
+                  tooltip={isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+                  className={isFavorite ? "text-red-500" : ""}
                 />
               </div>
             </div>

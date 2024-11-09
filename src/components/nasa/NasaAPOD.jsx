@@ -4,7 +4,16 @@ import { useNasaAPOD } from '../../hooks/useNasaAPOD';
 import AdvancedImageViewer from './AdvancedImageViewer';
 
 const NasaAPOD = () => {
-  const { loading, error, apodData, selectedDate, setSelectedDate, fetchAPOD } = useNasaAPOD();
+  const { 
+    loading, 
+    error, 
+    apodData, 
+    selectedDate, 
+    setSelectedDate, 
+    fetchAPOD,
+    toggleFavorite,
+    isFavorite 
+  } = useNasaAPOD();
 
   const handleDateChange = (e) => {
     const newDate = e.target.value;
@@ -19,15 +28,19 @@ const NasaAPOD = () => {
         <motion.header 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-8 text-center"
         >
-          <h1 className="text-3xl font-bold text-white">
-            Astronomy Picture of the Day
+          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cosmic-400 to-nebula-400 
+                       bg-clip-text text-transparent font-display mb-2">
+            CosmicLens
           </h1>
+          <p className="text-zinc-400 text-lg">
+            Discover the Cosmos, One Image at a Time
+          </p>
         </motion.header>
 
         {/* Controls */}
-        <div className="mb-8 flex flex-wrap gap-4 items-center">
+        <div className="mb-8 flex flex-wrap gap-4 items-center justify-center">
           <div className="relative">
             <input
               type="date"
@@ -36,7 +49,7 @@ const NasaAPOD = () => {
               max={new Date().toISOString().split('T')[0]}
               min="1995-06-16"
               className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 text-white
-                        focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none
+                        focus:border-cosmic-500 focus:ring-1 focus:ring-cosmic-500 outline-none
                         appearance-none w-48"
             />
             <FaCalendar className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
@@ -46,7 +59,7 @@ const NasaAPOD = () => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => fetchAPOD()}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 px-4 py-2 
+            className="flex items-center gap-2 bg-cosmic-600 hover:bg-cosmic-700 px-4 py-2 
                      rounded-lg text-white transition-colors"
           >
             <FaRandom className="w-4 h-4" />
@@ -65,7 +78,11 @@ const NasaAPOD = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <AdvancedImageViewer image={apodData} />
+              <AdvancedImageViewer 
+                image={apodData}
+                onToggleFavorite={toggleFavorite}
+                isFavorite={isFavorite(apodData.date)}
+              />
             </motion.div>
           )}
         </div>
@@ -76,7 +93,7 @@ const NasaAPOD = () => {
 
 const LoadingSpinner = () => (
   <div className="flex items-center justify-center h-64">
-    <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+    <div className="w-8 h-8 border-2 border-cosmic-500 border-t-transparent rounded-full animate-spin" />
   </div>
 );
 

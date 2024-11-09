@@ -6,6 +6,10 @@ export const useNasaAPOD = () => {
   const [error, setError] = useState('');
   const [apodData, setApodData] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [favorites, setFavorites] = useState(() => {
+    const saved = localStorage.getItem('nasaFavorites');
+    return saved ? JSON.parse(saved) : [];
+  });
 
   const addToHistory = (data) => {
     const history = JSON.parse(localStorage.getItem('nasaHistory') || '[]');
@@ -15,6 +19,26 @@ export const useNasaAPOD = () => {
       const newHistory = [data, ...history].slice(0, 50); // Keep last 50 items
       localStorage.setItem('nasaHistory', JSON.stringify(newHistory));
     }
+  };
+
+  const toggleFavorite = (data) => {
+    setFavorites(prev => {
+      const exists = prev.some(item => item.date === data.date);
+      let newFavorites;
+      
+      if (exists) {
+        newFavorites = prev.filter(item => item.date !== data.date);
+      } else {
+        newFavorites = [...prev, data];
+      }
+      
+      localStorage.setItem('nasaFavorites', JSON.stringify(newFavorites));
+      return newFavorites;
+    });
+  };
+
+  const isFavorite = (date) => {
+    return favorites.some(item => item.date === date);
   };
 
   const fetchAPOD = async (date = null) => {
@@ -44,6 +68,9 @@ export const useNasaAPOD = () => {
     apodData,
     selectedDate,
     setSelectedDate,
-    fetchAPOD
+    fetchAPOD,
+    toggleFavorite,
+    isFavorite,
+    favorites
   };
 }; 
