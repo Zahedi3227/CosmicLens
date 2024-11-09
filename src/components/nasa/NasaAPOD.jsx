@@ -6,6 +6,12 @@ import AdvancedImageViewer from './AdvancedImageViewer';
 const NasaAPOD = () => {
   const { loading, error, apodData, selectedDate, setSelectedDate, fetchAPOD } = useNasaAPOD();
 
+  const handleDateChange = (e) => {
+    const newDate = e.target.value;
+    setSelectedDate(newDate);
+    fetchAPOD(newDate);
+  };
+
   return (
     <div className="min-h-screen bg-black">
       <div className="max-w-7xl mx-auto px-4 py-6">
@@ -26,7 +32,7 @@ const NasaAPOD = () => {
             <input
               type="date"
               value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
+              onChange={handleDateChange}
               max={new Date().toISOString().split('T')[0]}
               min="1995-06-16"
               className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 text-white
