@@ -1,11 +1,12 @@
 import React from 'react'
-import NasaAPOD from './components/NasaAPOD'
+import ModernLayout from './components/layout/ModernLayout'
+import NasaAPOD from './components/nasa/NasaAPOD'
 
 const App = () => {
   return (
-    <div>
+    <ModernLayout>
       <NasaAPOD />
-    </div>
+    </ModernLayout>
   )
 }
 

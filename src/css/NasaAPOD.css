@@ -1,197 +1,47 @@
+/* Base styles */
 body {
-  min-height: 100vh;
-  background: linear-gradient(
-    125deg,
-    #000000,
-    #1a1a2e,
-    #16213e,
-    #1a1a2e,
-    #000000
-  );
-  background-attachment: fixed;
-  background-size: 300% 300%;
-  animation: gradientBG 15s ease infinite;
+  background: #000;
+  color: #fff;
 }
 
-@keyframes gradientBG {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-.date-picker-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.date-picker-container::after {
-  display: none;
-}
-
-/* Enhanced date input styling */
+/* Date input styling */
 input[type="date"] {
   color-scheme: dark;
-  font-family: system-ui, -apple-system, sans-serif;
-  color: #fff;
-  width: 170px;
-  padding: 0 35px 0 12px;
-  position: relative;
-  cursor: pointer;
-  background: transparent;
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1) brightness(80%) sepia(100%) saturate(400%) hue-rotate(180deg);
-  opacity: 0.7;
+  filter: invert(1);
+  opacity: 0.5;
   cursor: pointer;
+}
+
+/* Transitions */
+.transition-all {
   transition: all 0.2s ease;
-  position: absolute;
-  right: 8px;
-  padding: 0;
-  width: 20px;
-  height: 20px;
-  z-index: 2;
-  background-color: transparent;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator:hover {
-  opacity: 1;
-  transform: scale(1.1);
+/* Image container */
+.image-container {
+  background: rgb(24, 24, 27);
+  border-radius: 0.75rem;
+  overflow: hidden;
 }
 
-input[type="date"]::-webkit-datetime-edit {
-  padding: 0;
+/* Controls */
+.control-button {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  transition: all 0.2s ease;
 }
 
-input[type="date"]::-webkit-datetime-edit-fields-wrapper {
-  padding: 0;
+.control-button:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, rgba(139, 92, 246, 0.5), rgba(59, 130, 246, 0.5));
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, rgba(139, 92, 246, 0.7), rgba(59, 130, 246, 0.7));
-}
-
-/* Enhanced image hover effects */
-.image-container img {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-}
-
-.image-container:hover img {
-  transform: scale(1.02);
-  box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
-}
-
-/* Glass morphism effects */
-.glass-effect {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 
-    0 8px 32px 0 rgba(31, 38, 135, 0.37),
-    inset 0 0 32px 0 rgba(31, 38, 135, 0.1);
-}
-
-/* Button hover effects */
-button {
-  transition: all 0.3s ease;
-}
-
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
-}
-
-button:active {
-  transform: translateY(0);
-}
-
-/* Loading animation enhancement */
-.animate-spin {
-  animation: spin 1s linear infinite;
-  background: linear-gradient(to right, #6366f1, #8b5cf6);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Responsive title */
+/* Mobile adjustments */
 @media (max-width: 640px) {
-  h1 {
-    font-size: 1.75rem;
-    line-height: 2rem;
-  }
-}
-
-/* Shimmer effect for loading */
-.shimmer {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.1) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-/* Enhanced mobile responsiveness */
-@media (max-width: 768px) {
-  .date-picker-container {
-    width: 100%;
-  }
-  
   input[type="date"] {
     width: 100%;
   }
-  
-  .controls-container {
-    flex-direction: column;
-    gap: 1rem;
-  }
-}
-
-/* Smooth transitions */
-* {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
