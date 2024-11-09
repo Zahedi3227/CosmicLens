@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { FaCalendar, FaClock, FaRandom } from 'react-icons/fa';
+import Button from '../common/Button'; // Importing the Button component
 
 const ModernHeader = ({ selectedDate, onDateChange, onRandomDate }) => {
   return (
@@ -58,40 +59,25 @@ const ModernHeader = ({ selectedDate, onDateChange, onRandomDate }) => {
 
           {/* Action Buttons */}
           <div className="flex gap-3">
-            <ModernButton
+            <Button
               icon={FaRandom}
               onClick={onRandomDate}
-              label="Random Date"
-              primary
-            />
-            <ModernButton
+              className="bg-gradient-to-r from-nebula-600 to-cosmos-600 hover:from-nebula-500 hover:to-cosmos-500 text-white shadow-nebula-500/25"
+            >
+              Random Date
+            </Button>
+            <Button
               icon={FaClock}
               onClick={() => onDateChange(new Date().toISOString().split('T')[0])}
-              label="Today"
-            />
+              className="bg-nebula-900/50 hover:bg-nebula-800/50 text-nebula-100 border border-nebula-700/30 hover:border-nebula-500/50"
+            >
+              Today
+            </Button>
           </div>
         </div>
       </div>
     </motion.header>
   );
 };
-
-const ModernButton = ({ icon: Icon, onClick, label, primary }) => (
-  <motion.button
-    whileHover={{ scale: 1.02 }}
-    whileTap={{ scale: 0.98 }}
-    onClick={onClick}
-    className={`
-      flex items-center gap-2 px-5 py-3 rounded-xl font-medium
-      transition-all duration-200 shadow-lg
-      ${primary 
-        ? 'bg-gradient-to-r from-nebula-600 to-cosmos-600 hover:from-nebula-500 hover:to-cosmos-500 text-white shadow-nebula-500/25'
-        : 'bg-nebula-900/50 hover:bg-nebula-800/50 text-nebula-100 border border-nebula-700/30 hover:border-nebula-500/50'}
-    `}
-  >
-    <Icon className="w-4 h-4" />
-    <span>{label}</span>
-  </motion.button>
-);
 
 export default ModernHeader; 

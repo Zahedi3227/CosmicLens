@@ -23,7 +23,8 @@ const EnhancedImageViewer = ({ image }) => {
     link.download = image.title;
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
+      document.body.removeChild(link);
+      
   };
 
   return (

@@ -1,44 +1,30 @@
 import { useEffect, useState } from 'react';
 import { fetchAPODData } from '../services/nasaApi';
+import { useFavorites } from './useFavorites';
 
 export const useNasaAPOD = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [apodData, setApodData] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-  const [favorites, setFavorites] = useState(() => {
-    const saved = localStorage.getItem('nasaFavorites');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const { favorites, addFavorite, removeFavorite, isFavorite } = useFavorites();
 
   const addToHistory = (data) => {
     const history = JSON.parse(localStorage.getItem('nasaHistory') || '[]');
     const exists = history.some(item => item.date === data.date);
     
     if (!exists) {
-      const newHistory = [data, ...history].slice(0, 50); // Keep last 50 items
+      const newHistory = [data, ...history].slice(0, 50);
       localStorage.setItem('nasaHistory', JSON.stringify(newHistory));
     }
   };
 
   const toggleFavorite = (data) => {
-    setFavorites(prev => {
-      const exists = prev.some(item => item.date === data.date);
-      let newFavorites;
-      
-      if (exists) {
-        newFavorites = prev.filter(item => item.date !== data.date);
-      } else {
-        newFavorites = [...prev, data];
-      }
-      
-      localStorage.setItem('nasaFavorites', JSON.stringify(newFavorites));
-      return newFavorites;
-    });
-  };
-
-  const isFavorite = (date) => {
-    return favorites.some(item => item.date === date);
+    if (isFavorite(data.url)) {
+      removeFavorite(data.url);
+    } else {
+      addFavorite(data);
+    }
   };
 
   const fetchAPOD = async (date = null) => {

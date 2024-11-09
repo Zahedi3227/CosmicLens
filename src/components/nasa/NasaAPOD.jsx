@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
-import { Calendar, Shuffle } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Calendar, Heart, Shuffle } from 'lucide-react';
 import { useNasaAPOD } from '../../hooks/useNasaAPOD';
 import AdvancedImageViewer from './AdvancedImageViewer';
 
@@ -19,6 +19,36 @@ const NasaAPOD = () => {
     const newDate = e.target.value;
     setSelectedDate(newDate);
     fetchAPOD(newDate);
+  };
+
+  const FavoriteButton = ({ imageUrl }) => {
+    const isImageFavorited = isFavorite(imageUrl);
+    
+    return (
+      <motion.button
+        onClick={() => toggleFavorite(apodData)}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        className={`p-3 rounded-full backdrop-blur-sm transition-all duration-300
+          ${isImageFavorited 
+            ? 'bg-cosmic-500 text-white' 
+            : 'bg-space-800/50 text-space-300 hover:bg-space-700/50'}`}
+      >
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={isImageFavorited ? 'filled' : 'empty'}
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.5, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <Heart 
+              className={`w-5 h-5 ${isImageFavorited ? 'fill-current' : ''}`} 
+            />
+          </motion.div>
+        </AnimatePresence>
+      </motion.button>
+    );
   };
 
   return (

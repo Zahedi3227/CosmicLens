@@ -2,12 +2,12 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {
     Download,
     Expand,
-    Heart,
     Minimize2,
     Settings,
     X
 } from 'lucide-react';
 import { useRef, useState } from 'react';
+import FavoriteAnimation from '../common/FavoriteAnimation';
 
 const AdvancedImageViewer = ({ image, onToggleFavorite, isFavorite }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -113,11 +113,12 @@ const AdvancedImageViewer = ({ image, onToggleFavorite, isFavorite }) => {
                     tooltip="Open Image in New Tab"
                   />
                 )}
-                <ControlButton
-                  icon={Heart}
-                  onClick={() => onToggleFavorite(image)}
-                  tooltip={isFavorite ? "Remove from Favorites" : "Add to Favorites"}
-                  className={isFavorite ? "text-red-500" : ""}
+                <FavoriteAnimation 
+                  isActive={isFavorite}
+                  onToggle={() => {
+                    onToggleFavorite(image);
+                    // Show feedback toast or animation here if needed
+                  }}
                 />
               </div>
             </div>
